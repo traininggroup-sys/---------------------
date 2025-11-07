@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<div class="container-card">
+<p id="finished-section"></p>
+<h2 id="next-section"></h2>
+<p id="countdown"></p>
+<div class="actions">
+<button id="start-now" class="btn">ابدأ الآن</button>
+</div>
+</div>
+</main>
+
+
+<script>
+const sections = [
+'محور الكفايات السلوكية',
+'محور الكفايات اللغوية',
+'محور الكفاية المعرفية (معلومات عامة)',
+'محور الكفايات التكنولوجية (حاسب آلي)',
+'محور الكفايات التربوية (تربوي)',
+'محور كفايات التخصص'
+];
+
+
+function getQueryParam(param) {
+return new URLSearchParams(location.search).get(param);
+}
+
+
+function initNextSection() {
+const idx = parseInt(getQueryParam('section'));
+const finishedIndex = idx - 1;
+document.getElementById('finished-section').textContent = finishedIndex >= 0 ? `انتهى المحور: ${sections[finishedIndex]}` : 'لم يتم إنهاء محور سابق';
+document.getElementById('next-section').textContent = `المحور التالي: ${sections[idx]}`;
+
+
+let time = 5;
+const countdownEl = document.getElementById('countdown');
+countdownEl.textContent = `سيبدأ الاختبار خلال ${time} ثوانٍ...`;
+const timer = setInterval(() => {
+time--;
+countdownEl.textContent = `سيبدأ الاختبار خلال ${time} ثوانٍ...`;
+if (time <= 0) {
+clearInterval(timer);
+startNextSection(idx);
+}
+}, 1000);
+
+
+document.getElementById('start-now').addEventListener('click', () => {
+clearInterval(timer);
+startNextSection(idx);
+});
+}
+
+
+function startNextSection(idx) {
+// Redirect according to target
+if (sections[idx] === 'محور الكفايات اللغوية') {
+window.location.href = 'language_choice.html?section=' + idx;
+} else if (sections[idx] === 'محور الكفايات التكنولوجية (حاسب آلي)') {
+window.location.href = 'computer_choice.html?section=' + idx;
+} else {
+window.location.href = `quiz.html?section=${idx}`;
+}
+}
+
+
+window.onload = initNextSection;
+</script>
+</body>
+</html>

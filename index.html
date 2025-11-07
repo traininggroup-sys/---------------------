@@ -3,498 +3,320 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نظام امتحان الجهاز المركزي</title>
+    <title>اختبار الجهاز المركزي للتنظيم والإدارة</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Tahoma", sans-serif;
+        text-align: center;
+        background: #f7f7f7;
         direction: rtl;
-        background-color: #f9f9f9;
         margin: 0;
         padding: 0;
       }
-      .container {
-        margin: 50px auto;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: start;
+      .screen {
+        display: none;
+        padding: 30px;
       }
-      h1,
-      h2 {
-        color: #333;
-      }
-      #welcome-screen {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      .active {
+        display: block;
       }
       button {
-        display: block;
-        padding: 10px 20px;
-        background-color: #06896f;
-        color: #fff;
+        background: #007bff;
+        color: white;
         border: none;
-        border-radius: 4px;
+        padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
-        margin: 10px auto;
-        font-weight: 600;
-      }
-      button:hover {
-        background-color: #2a3139;
-      }
-      button:disabled {
-        background-color: #606d68;
-        cursor: not-allowed;
-      }
-      ol {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 35px;
-        justify-content: center;
-        align-items: flex-start;
-        list-style: none;
-        padding: 0;
-        font-weight: 900;
-      }
-      ul {
-        text-align: justify;
-        color: #2a2aef;
-      }
-      h3 {
-        text-align: justify;
-        margin-right: 33px;
-        text-decoration: underline;
-        font-size: 22px;
-      }
-      p {
-        margin-bottom: 0;
-        font-size: 18px;
-        line-height: 1.6;
-      }
-      img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 6px;
-      }
-      .hidden {
-        display: none;
-      }
-      #timer {
-        font-size: 18px;
-        margin-bottom: 20px;
-        color: red;
-        font-weight: bold;
-      }
-      #question-container {
-        margin: 20px 0;
-        padding: 15px;
-        background: #fff;
-        border: 1px solid #ddd;
         border-radius: 8px;
       }
-      .active_test {
-        background: #0adf98;
-        color: #000;
-        width: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
+      button[disabled] {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .countdown {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
         font-size: 18px;
-        border-radius: 5px;
-        font-weight: bolder;
       }
-      .disactive_test {
-        background: #606d68;
-        color: #ffffff;
-        width: 200px;
+      .lang-row {
         display: flex;
-        align-items: center;
+        gap: 12px;
         justify-content: center;
-        padding: 10px;
-        font-size: 18px;
-        border-radius: 5px;
-      }
-      .color_list {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 11px;
-        margin-bottom: 30px;
-      }
-      .active_color,
-      .disactive_color {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-      }
-      .active_color {
-        background: #0adf98;
-      }
-      .disactive_color {
-        background: #606d68;
-      }
-      .color_list span {
-        color: #ff0000;
-        font-weight: 800;
-        font-size: 23px;
-      }
-      .test_description {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-      }
-      #next-section-screen {
-        text-align: center;
-        padding: 30px;
-        background-color: #fff8dc;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        margin: 20px auto;
-        max-width: 500px;
-      }
-      .lang-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-      }
-      .lang-buttons button {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-      }
-      .lang-buttons img {
-        width: 50px;
-        height: 50px;
+        margin-top: 18px;
       }
     </style>
   </head>
   <body>
-    <div class="container" id="main-container">
-      <!-- الصفحة الرئيسية -->
-      <div id="welcome-screen">
-        <h1>مرحباً بك في امتحان الجهاز المركزي</h1>
-        <button onclick="startExam()" id="start-button">البدء</button>
+    <!-- شاشة الترحيب -->
+    <section id="welcome" class="screen active">
+      <h2>
+        نفيدكم علمًا بأنكم على وشك البدء في اختبار الجهاز المركزي للتنظيم
+        والإدارة
+      </h2>
+      <button onclick="showSection('axes')">متابعة</button>
+    </section>
+
+    <!-- شاشة عرض المحاور -->
+    <section id="axes" class="screen">
+      <h2>محاور الاختبار</h2>
+      <ul>
+        <li>1️⃣ محور الجدارات السلوكية</li>
+        <li>2️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
+        <li>3️⃣ محور الكفاية المعرفية (معلومات عامة)</li>
+        <li>4️⃣ محور الكفايات التكنولوجية (حاسب آلي)</li>
+        <li>5️⃣ محور الكفايات التربوية (تربوي)</li>
+        <li>6️⃣ محور كفايات التخصص</li>
+      </ul>
+      <button onclick="startExam()">ابدأ أول محور</button>
+    </section>
+
+    <!-- شاشة اختيار اللغة -->
+    <section id="languageSelect" class="screen">
+      <h2 id="langTitle">اختر اللغة</h2>
+      <div class="lang-row">
+        <button id="btn-ar" onclick="chooseLanguage('ar')">عربي</button>
+        <button id="btn-en" onclick="chooseLanguage('en')">إنجليزي</button>
       </div>
+    </section>
 
-      <!-- صفحة المحاور -->
-      <div id="section-screen" class="hidden">
-        <h3 style="color: red">نفيدكم علماً بالتالي</h3>
-        <ul>
-          <li>
-            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداءً بامتحانات الجدرات
-            السلوكية.
-          </li>
-          <li>حفظ الإجابة يتم باختيار إحدى الإجابات ثم الضغط على التالي.</li>
-        </ul>
-        <div class="color_list">
-          <div class="active_color"></div>
-          <span>مفعل</span>
-          <div class="disactive_color"></div>
-          <span>غير مفعل</span>
-        </div>
-        <ol id="section-list">
-          <div class="test_description" data-section="behavior">
-            <img src="https://i.ibb.co/c6X9VtD/behavior.jpg" />
-            <li class="active_test">جدارات سلوكية</li>
-            <p>اختبار لقياس ١٢ سمة شخصية</p>
-          </div>
-          <div class="test_description" data-section="job">
-            <img src="https://i.ibb.co/ZVmr9x5/job.jpg" />
-            <li class="disactive_test">جدارات وظيفية</li>
-            <p>قياس الجدارات المطلوبة للمجال</p>
-          </div>
-          <div class="test_description" data-section="iq">
-            <img src="https://i.ibb.co/B3bF2CP/iq.jpg" />
-            <li class="disactive_test">اختبار IQ</li>
-            <p>صور + متتاليات</p>
-          </div>
-          <div class="test_description" data-section="language">
-            <img src="https://i.ibb.co/0VPHn2C/language.jpg" />
-            <li class="disactive_test">اللغة</li>
-            <p>اختبار عربي + إنجليزي</p>
-          </div>
-          <div class="test_description" data-section="general">
-            <img src="https://i.ibb.co/0fbhdfP/general.jpg" />
-            <li class="disactive_test">معلومات عامة</li>
-            <p>تاريخ وجغرافيا وغيرها</p>
-          </div>
-          <div class="test_description" data-section="computer">
-            <img src="https://i.ibb.co/X7CLrFG/computer.jpg" />
-            <li class="disactive_test">الحاسب</li>
-            <p>عربي أو إنجليزي</p>
-          </div>
-          <div class="test_description" data-section="specialization">
-            <img src="https://i.ibb.co/k1DgYz6/specialization.jpg" />
-            <li class="disactive_test">التخصص</li>
-            <p>اختبار في التخصص المطلوب</p>
-          </div>
-        </ol>
-      </div>
+    <!-- شاشة الاختبار -->
+    <section id="examScreen" class="screen">
+      <h2 id="examTitle"></h2>
+      <div id="questionContainer"></div>
+      <button id="nextBtn" onclick="nextQuestion()">التالي</button>
+    </section>
 
-      <!-- شاشة الامتحان -->
-      <div id="quiz-screen" class="hidden">
-        <div id="timer">الوقت:</div>
-        <div id="question-container"></div>
-        <button id="next-button" onclick="nextQuestion()">التالي</button>
-      </div>
+    <!-- شاشة الاستراحة -->
+    <section id="breakScreen" class="screen">
+      <h2 id="nextAxisTitle">استعد للمحور القادم</h2>
+      <div class="countdown">يبدأ خلال <span id="countdown">5</span> ثوانٍ</div>
+      <button onclick="skipBreak()">ابدأ الآن</button>
+    </section>
 
-      <!-- شاشة النتيجة -->
-      <div id="result-screen" class="hidden"></div>
-
-      <!-- شاشة المحور التالي -->
-      <div id="next-section-screen" class="hidden"></div>
-    </div>
+    <!-- شاشة النهاية -->
+    <section id="endScreen" class="screen">
+      <h2>انتهيت من جميع المحاور ✅</h2>
+      <button onclick="location.reload()">تسجيل الخروج</button>
+    </section>
 
     <script>
-      const allQuestions = {
-        behavior: [
-          {
-            q: "ما هي عاصمة مصر؟",
-            options: ["القاهرة", "الإسكندرية", "الأقصر", "أسوان"],
-            answer: 0,
-          },
-          {
-            q: "ما هو أكبر نهر في العالم؟",
-            options: ["النيل", "الأمازون", "الدانوب", "اليانغتسي"],
-            answer: 1,
-          },
-        ],
-        job: [
-          { q: "ما هو دورك في الوظيفة؟", options: ["إدارة", "دعم"], answer: 0 },
-        ],
-        iq_images: [
-          {
-            q: "اختر الصورة المناسبة للنمط",
-            options: ["A", "B", "C", "D"],
-            answer: 2,
-          },
-        ],
-        iq_sequences: [
-          { q: "اكمل: 2, 4, 6, ?", options: ["7", "8", "9", "10"], answer: 1 },
-        ],
-        arabic: [
-          {
-            q: "مرادف 'ذكي'؟",
-            options: ["غبي", "نبيه", "كسول", "مغرور"],
-            answer: 1,
-          },
-        ],
-        english: [
-          {
-            q: "Synonym of 'smart'?",
-            options: ["Dumb", "Clever", "Lazy", "Mean"],
-            answer: 1,
-          },
-        ],
-        general: [
-          {
-            q: "أين تقع الأهرامات؟",
-            options: ["القاهرة", "الجيزة", "الأقصر"],
-            answer: 1,
-          },
-        ],
-        computer_ar: [
-          { q: "ما هو نظام التشغيل؟", options: ["ويندوز", "ورد"], answer: 0 },
-        ],
-        computer_en: [
-          { q: "What is an OS?", options: ["Windows", "Excel"], answer: 0 },
-        ],
-        specialization: [
-          {
-            q: "ما هي لغة تصميم المواقع؟",
-            options: ["HTML", "C++"],
-            answer: 0,
-          },
-        ],
-      };
-
-      const sectionOrder = [
-        "behavior",
-        "job",
-        "iq",
-        "language",
-        "general",
-        "computer",
-        "specialization",
+      const screens = document.querySelectorAll(".screen");
+      const axes = [
+        { key: "behavioral", label: "الجدارات السلوكية" },
+        { key: "linguistic", label: "الكفايات اللغوية" },
+        { key: "cognitive", label: "الكفاية المعرفية" },
+        { key: "tech", label: "الكفايات التكنولوجية" },
+        { key: "pedagogic", label: "الكفايات التربوية" },
+        { key: "specialization", label: "كفايات التخصص" },
       ];
 
-      let currentSectionIndex = 0;
+      // sample questions
+      const QUESTIONS = {
+        behavioral: [{ q: "السؤال السلوكي 1", a: ["أ", "ب"], c: 0 }],
+        linguistic_ar: [{ q: "سؤال لغوي عربي 1", a: ["أ", "ب"], c: 0 }],
+        linguistic_en: [{ q: "English linguistic Q1", a: ["A", "B"], c: 0 }],
+        cognitive: [{ q: "سؤال معرفي 1", a: ["أ", "ب"], c: 0 }],
+        tech_ar: [{ q: "سؤال حاسب عربي 1", a: ["أ", "ب"], c: 0 }],
+        tech_en: [{ q: "Computer Q1", a: ["Yes", "No"], c: 0 }],
+        pedagogic: [{ q: "سؤال تربوي 1", a: ["أ", "ب"], c: 0 }],
+        specialization: [{ q: "سؤال تخصص 1", a: ["أ", "ب"], c: 0 }],
+      };
+
+      let currentAxisIndex = 0;
+      let currentLang = null; // 'ar' or 'en'
+      let axisLangDone = {
+        linguistic: { ar: false, en: false },
+        tech: { ar: false, en: false },
+      }; // track per-axis per-lang
+      let axisDone = {}; // axis.key => true when fully done
+      let currentQuestions = [];
       let currentQuestionIndex = 0;
-      let currentSection = null;
-      let score = 0;
-      let timer;
-      let sectionDone = { arabic: false, english: false };
+
+      function showSection(id) {
+        screens.forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
 
       function startExam() {
-        document.getElementById("welcome-screen").classList.add("hidden");
-        document.getElementById("section-screen").classList.remove("hidden");
+        currentAxisIndex = 0;
+        startAxis();
       }
 
-      function launchQuiz(sectionKey) {
-        currentSection = sectionKey;
+      function startAxis() {
+        const axis = axes[currentAxisIndex];
+        if (!axis) return showSection("endScreen");
+
+        // if axis already done (shouldn't happen in normal flow) skip
+        if (axisDone[axis.key]) {
+          currentAxisIndex++;
+          return startAxis();
+        }
+
+        // linguistic special flow: require both languages, enable only not-done languages
+        if (axis.key === "linguistic") {
+          setupLanguageSelectForAxis("linguistic");
+          return;
+        }
+
+        // tech special flow: choose one language, after finishing it, consider axis done (do not return to lang select)
+        if (axis.key === "tech") {
+          setupLanguageSelectForAxis("tech");
+          return;
+        }
+
+        // default axes: load questions and show
+        loadQuestionsForAxis(axis.key);
+        showSection("examScreen");
+      }
+
+      function setupLanguageSelectForAxis(axisKey) {
+        currentLang = null;
+        // update title
+        document.getElementById("langTitle").textContent =
+          "اختر اللغة - " + axes[currentAxisIndex].label;
+        // enable/disable buttons based on axisLangDone
+        const btnAr = document.getElementById("btn-ar");
+        const btnEn = document.getElementById("btn-en");
+
+        if (axisKey === "linguistic") {
+          btnAr.disabled = axisLangDone.linguistic.ar;
+          btnEn.disabled = axisLangDone.linguistic.en;
+        } else if (axisKey === "tech") {
+          // for tech: allow either language only if axis not done
+          const doneBoth = axisLangDone.tech.ar || axisLangDone.tech.en; // if one done, treat axis as done
+          btnAr.disabled = doneBoth;
+          btnEn.disabled = doneBoth;
+        }
+
+        showSection("languageSelect");
+      }
+
+      function chooseLanguage(lang) {
+        const axis = axes[currentAxisIndex];
+        currentLang = lang;
+        // prepare question key
+        const qKey =
+          axis.key === "linguistic"
+            ? `linguistic_${lang}`
+            : axis.key === "tech"
+            ? `tech_${lang}`
+            : `${axis.key}_${lang}`;
+        // for tech and linguistic we built keys accordingly
+        // load questions
+        loadQuestionsForAxis(qKey);
+        showSection("examScreen");
+      }
+
+      function loadQuestionsForAxis(key) {
+        // key for QUESTIONS: for normal axes use axis.key, for language axes use linguistic_ar etc.
+        currentQuestions =
+          QUESTIONS[key] || QUESTIONS[axes[currentAxisIndex].key] || [];
         currentQuestionIndex = 0;
-        score = 0;
-        showQuizScreen();
-        loadQuestion();
-        startTimer();
+        renderQuestion();
+        // set exam title
+        const axis = axes[currentAxisIndex];
+        let title = axis.label;
+        if (currentLang)
+          title += " - " + (currentLang === "ar" ? "عربي" : "English");
+        document.getElementById("examTitle").textContent = title;
       }
 
-      function showQuizScreen() {
-        document.getElementById("quiz-screen").classList.remove("hidden");
-        document.getElementById("result-screen").classList.add("hidden");
-        document.getElementById("next-section-screen").classList.add("hidden");
-      }
-
-      function loadQuestion() {
-        const question = allQuestions[currentSection][currentQuestionIndex];
-        const container = document.getElementById("question-container");
+      function renderQuestion() {
+        const container = document.getElementById("questionContainer");
+        if (!currentQuestions.length) {
+          container.innerHTML = "<p>لا توجد أسئلة لهذا المحور.</p>";
+          return;
+        }
+        const q = currentQuestions[currentQuestionIndex];
         container.innerHTML =
-          `<p>${question.q}</p>` +
-          question.options
+          `<p>${q.q}</p>` +
+          q.a
             .map(
-              (opt, i) =>
-                `<label><input type="radio" name="answer" value="${i}" /> ${opt}</label><br />`
+              (ans, i) =>
+                `<div><label><input name='ans' type='radio'/> ${ans}</label></div>`
             )
             .join("");
       }
 
       function nextQuestion() {
-        const selected = document.querySelector("input[name='answer']:checked");
-        if (selected) {
-          const value = parseInt(selected.value);
-          if (
-            value === allQuestions[currentSection][currentQuestionIndex].answer
-          ) {
-            score++;
-          }
-        }
         currentQuestionIndex++;
-        if (currentQuestionIndex < allQuestions[currentSection].length) {
-          loadQuestion();
-        } else {
-          endQuiz();
+        if (currentQuestionIndex < currentQuestions.length) {
+          renderQuestion();
+          return;
         }
+        // finished current language/axis
+        finishCurrent();
       }
 
-      function startTimer() {
-        clearInterval(timer);
-        const totalQuestions = allQuestions[currentSection].length;
-        let time = totalQuestions * 30;
-        const timerDiv = document.getElementById("timer");
-        timerDiv.textContent = `الوقت: ${time}`;
-        timer = setInterval(() => {
-          time--;
-          timerDiv.textContent = `الوقت: ${time}`;
-          if (time <= 0) {
-            clearInterval(timer);
-            endQuiz();
+      function finishCurrent() {
+        const axis = axes[currentAxisIndex];
+        // if linguistic: mark this language done; if both done -> axis done and move next; else go back to lang select with remaining enabled
+        if (axis.key === "linguistic") {
+          axisLangDone.linguistic[currentLang] = true;
+          // disable the language just finished (so user can't retake it)
+          // if both done -> mark axis done -> proceed to break/next
+          if (axisLangDone.linguistic.ar && axisLangDone.linguistic.en) {
+            axisDone["linguistic"] = true;
+            currentLang = null;
+            currentAxisIndex++;
+            startBreak();
+          } else {
+            currentLang = null;
+            setupLanguageSelectForAxis("linguistic");
+          }
+          return;
+        }
+
+        // if tech: mark chosen language done and mark axis as fully done (user won't be returned to select other language)
+        if (axis.key === "tech") {
+          axisLangDone.tech[currentLang] = true;
+          axisDone["tech"] = true;
+          currentLang = null;
+          currentAxisIndex++;
+          startBreak();
+          return;
+        }
+
+        // default axes
+        axisDone[axis.key] = true;
+        currentAxisIndex++;
+        startBreak();
+      }
+
+      function startBreak() {
+        if (currentAxisIndex >= axes.length) return showSection("endScreen");
+        document.getElementById(
+          "nextAxisTitle"
+        ).textContent = `استعد للمحور القادم: ${axes[currentAxisIndex].label}`;
+        let count = 5;
+        document.getElementById("countdown").textContent = count;
+        showSection("breakScreen");
+        const interval = setInterval(() => {
+          count--;
+          document.getElementById("countdown").textContent = count;
+          if (count <= 0) {
+            clearInterval(interval);
+            startAxis();
           }
         }, 1000);
-      }
-
-      function endQuiz() {
-        clearInterval(timer);
-        document.getElementById("quiz-screen").classList.add("hidden");
-
-        if (currentSection === "iq_images") {
-          launchQuiz("iq_sequences");
-          return;
-        }
-
-        if (currentSection === "arabic" || currentSection === "english") {
-          sectionDone[currentSection] = true;
-          if (sectionDone.arabic && sectionDone.english) {
-            showNextSectionScreen();
-          } else {
-            showLanguageChoice();
-          }
-          return;
-        }
-
-        showNextSectionScreen();
-      }
-
-      function showNextSectionScreen() {
-        document
-          .getElementById("next-section-screen")
-          .classList.remove("hidden");
-        const nextSection = sectionOrder[currentSectionIndex + 1];
-        if (!nextSection) {
-          document.getElementById(
-            "next-section-screen"
-          ).innerHTML = `<h2>انتهت جميع المحاور</h2>`;
-          return;
-        }
-        const nextName = translateSection(nextSection);
-        document.getElementById("next-section-screen").innerHTML = `
-    <h2>انتهى المحور: ${translateSection(currentSection)}</h2>
-    <p>المحور التالي:</p>
-    <div class="test_description">
-      <img src="${
-        document.querySelector('[data-section="' + nextSection + '"] img').src
-      }" />
-      <li class="active_test">${nextName}</li>
-    </div>
-    <button onclick="goToNextSection()">ابدأ الآن</button>
-  `;
-      }
-
-      function goToNextSection() {
-        currentSectionIndex++;
-        const next = sectionOrder[currentSectionIndex];
-        if (!next) {
-          alert("انتهت جميع المحاور!");
-          return;
-        }
-        if (next === "iq") {
-          launchQuiz("iq_images");
-        } else if (next === "language") {
-          showLanguageChoice();
-        } else {
-          launchQuiz(next);
-        }
-      }
-
-      function showLanguageChoice() {
-        document.getElementById("result-screen").classList.remove("hidden");
-        document.getElementById("result-screen").innerHTML = `
-    <h2>اختر اختبار اللغة:</h2>
-    <div class="lang-buttons">
-      <button onclick="launchQuiz('arabic')" ${
-        sectionDone.arabic ? "disabled" : ""
-      }>
-        <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> عربي
-      </button>
-      <button onclick="launchQuiz('english')" ${
-        sectionDone.english ? "disabled" : ""
-      }>
-        <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> English
-      </button>
-    </div>
-  `;
-      }
-
-      function translateSection(key) {
-        const map = {
-          behavior: "جدارات سلوكية",
-          job: "جدارات وظيفية",
-          iq: "اختبار IQ",
-          iq_images: "اختبار صور",
-          iq_sequences: "اختبار متتاليات",
-          language: "اللغة",
-          arabic: "كفايات لغوية - عربي",
-          english: "كفايات لغوية - إنجليزي",
-          general: "معلومات عامة",
-          computer: "الحاسب",
-          specialization: "التخصص",
+        window.skipBreak = function () {
+          clearInterval(interval);
+          startAxis();
         };
-        return map[key] || key;
       }
+
+      // start functions for buttons
+      window.showSection = showSection;
+      window.startExam = startExam;
+      window.skipBreak = skipBreak;
     </script>
   </body>
 </html>

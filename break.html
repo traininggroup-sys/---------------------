@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>استراحة</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2 id="next-section-title"></h2>
+      <p>سيبدأ الاختبار خلال <span id="countdown">5</span> ثوانٍ</p>
+      <button id="start-now" class="btn">ابدأ الآن</button>
+    </div>
+
+    <script>
+      function getQueryParam(param) {
+        return new URLSearchParams(window.location.search).get(param);
+      }
+
+      const sectionIdx = parseInt(getQueryParam("next"));
+      const sectionKeys = [
+        "behavior",
+        "language",
+        "knowledge",
+        "technology",
+        "education",
+        "specialization",
+      ];
+      const nextKey = sectionKeys[sectionIdx];
+
+      document.getElementById("next-section-title").textContent = nextKey
+        ? "المحور التالي: " + nextKey
+        : "انتهى الامتحان";
+      let time = 5;
+      const cd = document.getElementById("countdown");
+      const timer = setInterval(() => {
+        time--;
+        cd.textContent = time;
+        if (time <= 0) goNext();
+      }, 1000);
+
+      document.getElementById("start-now").addEventListener("click", goNext);
+
+      function goNext() {
+        clearInterval(timer);
+        if (sectionIdx >= sectionKeys.length)
+          window.location.href = "results.html";
+        else {
+          if (nextKey === "language")
+            window.location.href = "language_choice.html";
+          else if (nextKey === "technology")
+            window.location.href = "computer_choice.html";
+          else window.location.href = `quiz.html?section=${sectionIdx}`;
+        }
+      }
+
+      // If language or technology, check if both langs done, else go to choice
+      if (nextKey === "language") {
+        const prog = JSON.parse(localStorage.getItem("exam_progress") || "{}");
+        if (prog.language_ar && prog.language_en) {
+          // Both done, go to next (knowledge, section 2)
+          window.location.href = `quiz.html?section=2`;
+        } else {
+          // Go to choice
+          window.location.href = "language_choice.html";
+        }
+      } else if (nextKey === "technology") {
+        const prog = JSON.parse(localStorage.getItem("exam_progress") || "{}");
+        if (prog.technology_ar && prog.technology_en) {
+          // Both done, go to next (education, section 4)
+          window.location.href = `quiz.html?section=4`;
+        } else {
+          // Go to choice
+          window.location.href = "computer_choice.html";
+        }
+      }
+    </script>
+  </body>
+</html>
