@@ -145,14 +145,11 @@
     <section id="axes" class="screen">
       <h2>محاور الاختبار</h2>
       <ul>
-        <li>1️⃣ محور الجدارات السلوكية</li>
-        <li>2️⃣ محور القدرات الوظيفية</li>
-        <li>3️⃣ محور الأيكيو أشكال</li>
-        <li>4️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
-        <li>5️⃣ محور الكفاية المعرفية (معلومات عامة)</li>
-        <li>6️⃣ محور الكفايات التكنولوجية (حاسب آلي)</li>
-        <li>7️⃣ محور الكفايات التربوية (تربوي)</li>
-        <li>8️⃣ محور كفايات التخصص</li>
+        <li>1️⃣ محور الكفايات السلوكية والنفسية</li>
+        <li>2️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
+        <li>3️⃣ محور الكفايات المعرفية والتكنولوجية</li>
+        <li>4️⃣ محور الكفايات التربوية (تربوي)</li>
+        <li>5️⃣ محور كفايات التخصص</li>
       </ul>
       <button onclick="startExam()">ابدأ أول محور</button>
     </section>
@@ -191,12 +188,18 @@
     <script>
       const screens = document.querySelectorAll(".screen");
       const axes = [
-        { key: "behavioral", label: "الجدارات السلوكية" },
-        { key: "functional", label: "القدرات الوظيفية" },
-        { key: "iq_shapes", label: "الأيكيو أشكال" },
+        {
+          key: "behavioral_psychological",
+          label: "الكفايات السلوكية والنفسية",
+          subAxes: [
+            { key: "behavioral", label: "الجدارات السلوكية" },
+            { key: "functional", label: "القدرات الوظيفية" },
+            { key: "iq_shapes", label: "الأيكيو أشكال" },
+          ],
+        },
         { key: "linguistic", label: "الكفايات اللغوية" },
-        { key: "cognitive", label: "الكفاية المعرفية" },
-        { key: "tech", label: "الكفايات التكنولوجية" },
+        { key: "cognitive", label: "الكفايات المعرفية" },
+        { key: "tech", label: "الحاسب الآلي" },
         { key: "pedagogic", label: "الكفايات التربوية" },
         { key: "specialization", label: "كفايات التخصص" },
       ];
@@ -536,6 +539,7 @@
       };
 
       let currentAxisIndex = 0;
+      let currentSubAxisIndex = 0;
       let currentLang = null; // 'ar' or 'en'
       let axisLangDone = {
         linguistic: { ar: false, en: false },
@@ -592,6 +596,7 @@
         // if axis already done (shouldn't happen in normal flow) skip
         if (axisDone[axis.key]) {
           currentAxisIndex++;
+          currentSubAxisIndex = 0;
           return startAxis();
         }
 
@@ -604,6 +609,18 @@
         // tech special flow: choose one language, after finishing it, consider axis done (do not return to lang select)
         if (axis.key === "tech") {
           setupLanguageSelectForAxis("tech");
+          return;
+        }
+
+        // if axis has subAxes, start with first subAxis
+        if (axis.subAxes && axis.subAxes.length > 0) {
+          const subAxis = axis.subAxes[currentSubAxisIndex];
+          if (subAxis.key === "tech") {
+            setupLanguageSelectForAxis("tech");
+            return;
+          }
+          loadQuestionsForAxis(subAxis.key);
+          showSection("examScreen");
           return;
         }
 
@@ -670,9 +687,14 @@
         renderQuestion();
         // set exam title
         const axis = axes[currentAxisIndex];
-        let title = axis.label;
-        if (currentLang)
-          title += " - " + (currentLang === "ar" ? "عربي" : "English");
+        let title;
+        if (axis.subAxes && axis.subAxes[currentSubAxisIndex]) {
+          title = axis.subAxes[currentSubAxisIndex].label;
+        } else {
+          title = axis.label;
+          if (currentLang)
+            title += " - " + (currentLang === "ar" ? "عربي" : "English");
+        }
         document.getElementById("examTitle").textContent = title;
         // start timer
         startTimer();
@@ -736,6 +758,7 @@
             axisDone["linguistic"] = true;
             currentLang = null;
             currentAxisIndex++;
+            currentSubAxisIndex = 0;
             startBreak();
           } else {
             currentLang = null;
@@ -750,22 +773,55 @@
           axisDone["tech"] = true;
           currentLang = null;
           currentAxisIndex++;
+          currentSubAxisIndex = 0;
           startBreak();
+          return;
+        }
+
+        // if axis has subAxes, move to next subAxis
+        if (axis.subAxes && axis.subAxes.length > 0) {
+          currentSubAxisIndex++;
+          if (currentSubAxisIndex >= axis.subAxes.length) {
+            // all subAxes done, mark axis done and move to next axis
+            axisDone[axis.key] = true;
+            currentAxisIndex++;
+            currentSubAxisIndex = 0;
+            startBreak();
+          } else {
+            // start next subAxis
+            startAxis();
+          }
           return;
         }
 
         // default axes
         axisDone[axis.key] = true;
         currentAxisIndex++;
+        currentSubAxisIndex = 0;
         startBreak();
       }
 
       function startBreak() {
         if (currentAxisIndex >= axes.length) return showSection("endScreen");
-        document.getElementById(
-          "nextAxisTitle"
-        ).textContent = `استعد للمحور القادم: ${axes[currentAxisIndex].label}`;
-        let count = 5;
+        const axis = axes[currentAxisIndex];
+        let nextLabel;
+        let titleText;
+        let count;
+        if (
+          axis.subAxes &&
+          currentSubAxisIndex > 0 &&
+          currentSubAxisIndex < axis.subAxes.length
+        ) {
+          // next is sub-axis
+          nextLabel = axis.subAxes[currentSubAxisIndex].label;
+          titleText = `استعد للاختبار القادم: ${nextLabel}`;
+          count = 2;
+        } else {
+          nextLabel = axis.label;
+          titleText = `استعد للمحور القادم: ${nextLabel}`;
+          count = 5;
+        }
+        document.getElementById("nextAxisTitle").textContent = titleText;
         document.getElementById("countdown").textContent = count;
         showSection("breakScreen");
         const interval = setInterval(() => {
