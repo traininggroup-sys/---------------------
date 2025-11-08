@@ -693,6 +693,16 @@
                 `<div><label><input name='ans' type='radio'/> ${ans}</label></div>`
             )
             .join("");
+        // Add Enter key functionality to radio buttons
+        const inputs = container.querySelectorAll('input[name="ans"]');
+        inputs.forEach((input) => {
+          input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              this.checked = true;
+              nextQuestion();
+            }
+          });
+        });
       }
 
       function nextQuestion() {
