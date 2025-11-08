@@ -6,55 +6,132 @@
     <title>اختبار الجهاز المركزي للتنظيم والإدارة</title>
     <style>
       body {
-        font-family: "Tahoma", sans-serif;
+        font-family: "Arial", "Helvetica", sans-serif;
         text-align: center;
-        background: #f7f7f7;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
         direction: rtl;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+      }
+      .header {
+        background: #1565c0;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
       }
       .screen {
         display: none;
-        padding: 30px;
+        padding: 40px;
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
       }
       .active {
         display: block;
       }
       button {
-        background: #007bff;
+        background: #1976d2;
         color: white;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 24px;
         font-size: 16px;
         cursor: pointer;
-        border-radius: 8px;
+        border-radius: 6px;
+        transition: background 0.3s;
+        font-weight: bold;
+      }
+      button:hover {
+        background: #1565c0;
       }
       button[disabled] {
-        opacity: 0.45;
+        background: #ccc;
         cursor: not-allowed;
       }
       .countdown {
-        font-size: 22px;
-        color: #333;
+        font-size: 24px;
+        color: #d32f2f;
         margin-bottom: 20px;
+        font-weight: bold;
       }
       ul {
         list-style: none;
         padding: 0;
       }
       li {
-        margin: 10px 0;
+        margin: 15px 0;
         font-size: 18px;
+        background: #f5f5f5;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #1976d2;
       }
       .lang-row {
         display: flex;
-        gap: 12px;
+        gap: 20px;
         justify-content: center;
-        margin-top: 18px;
+        margin-top: 20px;
+      }
+      #timer {
+        background: #fff3e0;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 18px;
+        color: #e65100;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      #questionContainer {
+        text-align: right;
+        margin-bottom: 20px;
+      }
+      #questionContainer p {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      #questionContainer label {
+        display: block;
+        margin: 10px 0;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      #questionContainer label:hover {
+        background: #e3f2fd;
+      }
+      #questionContainer input[type="radio"] {
+        margin-left: 10px;
+      }
+      .footer {
+        text-align: center;
+        padding: 10px;
+        background: #1565c0;
+        color: white;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        font-size: 14px;
       }
     </style>
   </head>
   <body>
+    <div class="header">
+      <h1>الجهاز المركزي للتنظيم والإدارة</h1>
+      <p>اختبار التقييم الشامل</p>
+    </div>
     <!-- شاشة الترحيب -->
     <section id="welcome" class="screen active">
       <h2>
@@ -69,27 +146,31 @@
       <h2>محاور الاختبار</h2>
       <ul>
         <li>1️⃣ محور الجدارات السلوكية</li>
-        <li>2️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
-        <li>3️⃣ محور الكفاية المعرفية (معلومات عامة)</li>
-        <li>4️⃣ محور الكفايات التكنولوجية (حاسب آلي)</li>
-        <li>5️⃣ محور الكفايات التربوية (تربوي)</li>
-        <li>6️⃣ محور كفايات التخصص</li>
+        <li>2️⃣ محور القدرات الوظيفية</li>
+        <li>3️⃣ محور الأيكيو أشكال</li>
+        <li>4️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
+        <li>5️⃣ محور الكفاية المعرفية (معلومات عامة)</li>
+        <li>6️⃣ محور الكفايات التكنولوجية (حاسب آلي)</li>
+        <li>7️⃣ محور الكفايات التربوية (تربوي)</li>
+        <li>8️⃣ محور كفايات التخصص</li>
       </ul>
       <button onclick="startExam()">ابدأ أول محور</button>
     </section>
 
     <!-- شاشة اختيار اللغة -->
     <section id="languageSelect" class="screen">
-      <h2 id="langTitle">اختر اللغة</h2>
+      <h2 id="langTitle">اختر الاختبار الذي ستبدأ به</h2>
+      <p id="langNote"></p>
       <div class="lang-row">
-        <button id="btn-ar" onclick="chooseLanguage('ar')">عربي</button>
-        <button id="btn-en" onclick="chooseLanguage('en')">إنجليزي</button>
+        <button id="btn-ar" onclick="chooseLanguage('ar')">العربية</button>
+        <button id="btn-en" onclick="chooseLanguage('en')">English</button>
       </div>
     </section>
 
     <!-- شاشة الاختبار -->
     <section id="examScreen" class="screen">
       <h2 id="examTitle"></h2>
+      <div id="timer">الوقت المتبقي: <span id="timeLeft">5:00</span></div>
       <div id="questionContainer"></div>
       <button id="nextBtn" onclick="nextQuestion()">التالي</button>
     </section>
@@ -111,6 +192,8 @@
       const screens = document.querySelectorAll(".screen");
       const axes = [
         { key: "behavioral", label: "الجدارات السلوكية" },
+        { key: "functional", label: "القدرات الوظيفية" },
+        { key: "iq_shapes", label: "الأيكيو أشكال" },
         { key: "linguistic", label: "الكفايات اللغوية" },
         { key: "cognitive", label: "الكفاية المعرفية" },
         { key: "tech", label: "الكفايات التكنولوجية" },
@@ -118,16 +201,338 @@
         { key: "specialization", label: "كفايات التخصص" },
       ];
 
-      // sample questions
+      // real questions
       const QUESTIONS = {
-        behavioral: [{ q: "السؤال السلوكي 1", a: ["أ", "ب"], c: 0 }],
-        linguistic_ar: [{ q: "سؤال لغوي عربي 1", a: ["أ", "ب"], c: 0 }],
-        linguistic_en: [{ q: "English linguistic Q1", a: ["A", "B"], c: 0 }],
-        cognitive: [{ q: "سؤال معرفي 1", a: ["أ", "ب"], c: 0 }],
-        tech_ar: [{ q: "سؤال حاسب عربي 1", a: ["أ", "ب"], c: 0 }],
-        tech_en: [{ q: "Computer Q1", a: ["Yes", "No"], c: 0 }],
-        pedagogic: [{ q: "سؤال تربوي 1", a: ["أ", "ب"], c: 0 }],
-        specialization: [{ q: "سؤال تخصص 1", a: ["أ", "ب"], c: 0 }],
+        behavioral: [
+          {
+            q: "ما هو السلوك الأخلاقي المناسب في التعامل مع الزملاء؟",
+            a: ["الاحترام والصدق", "الغدر والكذب", "الإهمال", "العدوانية"],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع الضغط في العمل؟",
+            a: ["بالهدوء والتركيز", "بالغضب والصراخ", "بالاستسلام", "بالتجاهل"],
+            c: 0,
+          },
+          {
+            q: "ما هو دور التواصل في بناء الفريق؟",
+            a: ["يحسن التعاون", "يسبب الخلافات", "غير مهم", "يقلل الإنتاجية"],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع الفشل؟",
+            a: ["أتعلم منه وأتحسن", "ألوم الآخرين", "أستسلم", "أتجاهله"],
+            c: 0,
+          },
+          {
+            q: "ما هو أهمية الالتزام بالقواعد؟",
+            a: ["يضمن النظام", "يحد من الحرية", "غير ضروري", "يسبب التعقيد"],
+            c: 0,
+          },
+        ],
+        linguistic_ar: [
+          {
+            q: "ما هو الفرق بين 'أكل' و 'أكلت'؟",
+            a: [
+              "الماضي والمضارع",
+              "الجمع والمفرد",
+              "الذكر والأنثى",
+              "الفعل والاسم",
+            ],
+            c: 0,
+          },
+          {
+            q: "أي من الجمل التالية صحيحة نحوياً؟",
+            a: [
+              "ذهب الطالب إلى المدرسة",
+              "ذهبت الطالبة إلى المدرسة",
+              "ذهب الطالبات إلى المدرسة",
+              "ذهب الطلاب إلى المدرسة",
+            ],
+            c: 0,
+          },
+          {
+            q: "ما هو الإعراب الصحيح لكلمة 'الكتاب' في 'قرأت الكتاب'؟",
+            a: ["المفعول به", "الفاعل", "المبتدأ", "الخبر"],
+            c: 0,
+          },
+          {
+            q: "أي كلمة مرادفة لـ 'جميل'؟",
+            a: ["قبيح", "حسن", "سيء", "رديء"],
+            c: 1,
+          },
+          {
+            q: "ما هو نوع الجملة 'لا تذهب إلى هناك'؟",
+            a: ["الأمر", "الخبر", "الاستفهام", "التمني"],
+            c: 0,
+          },
+        ],
+        linguistic_en: [
+          {
+            q: "What is the past tense of 'go'?",
+            a: ["Goes", "Going", "Went", "Gone"],
+            c: 2,
+          },
+          {
+            q: "Which sentence is grammatically correct?",
+            a: [
+              "She go to school",
+              "She goes to school",
+              "She going to school",
+              "She went to school",
+            ],
+            c: 1,
+          },
+          {
+            q: "What is a synonym for 'happy'?",
+            a: ["Sad", "Joyful", "Angry", "Tired"],
+            c: 1,
+          },
+          {
+            q: "What type of word is 'quickly'?",
+            a: ["Noun", "Verb", "Adverb", "Adjective"],
+            c: 2,
+          },
+          {
+            q: "Complete the sentence: 'I ___ a book yesterday.'",
+            a: ["Read", "Reads", "Reading", "Will read"],
+            c: 0,
+          },
+        ],
+        cognitive: [
+          {
+            q: "ما هي عاصمة مصر؟",
+            a: ["القاهرة", "الإسكندرية", "أسوان", "الجيزة"],
+            c: 0,
+          },
+          {
+            q: "من هو مؤسس الدولة العثمانية؟",
+            a: ["عثمان الأول", "محمد الفاتح", "سليمان القانوني", "أورخان"],
+            c: 0,
+          },
+          {
+            q: "ما هو أكبر كوكب في المجموعة الشمسية؟",
+            a: ["الأرض", "المشتري", "زحل", "المريخ"],
+            c: 1,
+          },
+          {
+            q: "في أي عام وقعت ثورة 25 يناير؟",
+            a: ["2010", "2011", "2012", "2013"],
+            c: 1,
+          },
+          {
+            q: "ما هو اسم النهر الذي يمر بمصر؟",
+            a: ["النيل", "الفرات", "الدجلة", "الأردن"],
+            c: 0,
+          },
+        ],
+        tech_ar: [
+          {
+            q: "ما هو برنامج معالج النصوص الأساسي في Microsoft Office؟",
+            a: ["Word", "Excel", "PowerPoint", "Access"],
+            c: 0,
+          },
+          {
+            q: "ما هو اختصار CPU؟",
+            a: [
+              "Central Processing Unit",
+              "Computer Personal Unit",
+              "Control Processing Unit",
+              "Central Power Unit",
+            ],
+            c: 0,
+          },
+          {
+            q: "كيف تحفظ ملف في برنامج Word؟",
+            a: ["Ctrl + S", "Ctrl + P", "Ctrl + C", "Ctrl + V"],
+            c: 0,
+          },
+          {
+            q: "ما هو نظام التشغيل الأكثر استخداماً؟",
+            a: ["Windows", "Linux", "macOS", "Android"],
+            c: 0,
+          },
+          {
+            q: "ما هو الفرق بين الإنترنت والويب؟",
+            a: [
+              "الإنترنت هو الشبكة، الويب هو الخدمات",
+              "نفس الشيء",
+              "الويب أسرع",
+              "الإنترنت أقدم",
+            ],
+            c: 0,
+          },
+        ],
+        tech_en: [
+          {
+            q: "What does CPU stand for?",
+            a: [
+              "Central Processing Unit",
+              "Computer Personal Unit",
+              "Control Processing Unit",
+              "Central Power Unit",
+            ],
+            c: 0,
+          },
+          {
+            q: "Which is the most used operating system?",
+            a: ["Windows", "Linux", "macOS", "Android"],
+            c: 0,
+          },
+          {
+            q: "How to save a file in Word?",
+            a: ["Ctrl + S", "Ctrl + P", "Ctrl + C", "Ctrl + V"],
+            c: 0,
+          },
+          {
+            q: "What is the difference between Internet and Web?",
+            a: [
+              "Internet is the network, Web is the services",
+              "Same thing",
+              "Web is faster",
+              "Internet is older",
+            ],
+            c: 0,
+          },
+          {
+            q: "What is a browser?",
+            a: [
+              "Software to access web",
+              "Hardware device",
+              "Operating system",
+              "Programming language",
+            ],
+            c: 0,
+          },
+        ],
+        pedagogic: [
+          {
+            q: "ما هو دور المعلم في التعليم؟",
+            a: [
+              "توجيه الطلاب",
+              "فرض القواعد فقط",
+              "الترفيه",
+              "الإدارة المالية",
+            ],
+            c: 0,
+          },
+          {
+            q: "كيف يمكن تحفيز الطلاب؟",
+            a: ["بالتشجيع والمكافآت", "بالعقاب", "بالتجاهل", "بالقسر"],
+            c: 0,
+          },
+          {
+            q: "ما هي أهمية التقييم في التعليم؟",
+            a: ["قياس التقدم", "إهدار الوقت", "غير ضروري", "يسبب التوتر"],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع طالب صعب؟",
+            a: ["بالصبر والحوار", "بالعقاب القاسي", "بالإبعاد", "بالتجاهل"],
+            c: 0,
+          },
+          {
+            q: "ما هو المنهج التربوي؟",
+            a: ["خطة التعليم", "جدول الدراسة", "الكتب المدرسية", "الامتحانات"],
+            c: 0,
+          },
+        ],
+        specialization: [
+          {
+            q: "ما هو الاختصاص الرئيسي للجهاز المركزي؟",
+            a: ["التنظيم والإدارة", "التعليم", "الصحة", "الأمن"],
+            c: 0,
+          },
+          {
+            q: "كيف يتم تقييم الأداء في الجهاز؟",
+            a: ["بالمعايير المحددة", "عشوائياً", "بالرأي الشخصي", "غير مقيم"],
+            c: 0,
+          },
+          {
+            q: "ما هي أهمية التدريب في الجهاز؟",
+            a: ["تطوير المهارات", "إهدار الموارد", "غير مهم", "يسبب التعب"],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع الشكاوى في العمل؟",
+            a: ["بالتحقيق والحل", "بالتجاهل", "بالعقاب", "بالإهمال"],
+            c: 0,
+          },
+          {
+            q: "ما هو دور الإدارة في الجهاز؟",
+            a: ["تنظيم العمليات", "التنفيذ المباشر", "الترفيه", "المالية فقط"],
+            c: 0,
+          },
+        ],
+        functional: [
+          {
+            q: "ما هو المهارة الأساسية لحل المشكلات في العمل؟",
+            a: [
+              "التحليل والتفكير النقدي",
+              "السرعة في التنفيذ",
+              "الاعتماد على الآخرين",
+              "التجاهل",
+            ],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع مشروع متعدد المهام؟",
+            a: [
+              "بتنظيم الأولويات",
+              "بالعمل على كل شيء معاً",
+              "بالتأجيل",
+              "بالإهمال",
+            ],
+            c: 0,
+          },
+          {
+            q: "ما هو دور التخطيط في النجاح الوظيفي؟",
+            a: [
+              "يوجه الجهود نحو الهدف",
+              "يسبب التأخير",
+              "غير ضروري",
+              "يقلل الإنتاجية",
+            ],
+            c: 0,
+          },
+          {
+            q: "كيف تتعامل مع تغيير في المهام؟",
+            a: ["بالتكيف والتعلم", "بالرفض", "بالاستسلام", "بالتجاهل"],
+            c: 0,
+          },
+          {
+            q: "ما هي أهمية التعاون في الفريق؟",
+            a: ["يحسن النتائج", "يسبب الخلافات", "غير مهم", "يقلل الإنتاجية"],
+            c: 0,
+          },
+        ],
+        iq_shapes: [
+          {
+            q: "ما هو الشكل التالي في السلسلة: دائرة، مربع، مثلث؟",
+            a: ["نجمة", "مستطيل", "دائرة", "مثلث"],
+            c: 0,
+          },
+          {
+            q: "أي رقم يأتي بعد 2، 4، 8، 16؟",
+            a: ["32", "24", "18", "20"],
+            c: 0,
+          },
+          {
+            q: "ما هو الشيء المشترك بين الكلمات: قلم، كتاب، دفتر؟",
+            a: ["أدوات مكتبية", "ألوان", "أشكال", "أرقام"],
+            c: 0,
+          },
+          {
+            q: "أكمل السلسلة: A، C، E، G، ...؟",
+            a: ["I", "H", "J", "F"],
+            c: 0,
+          },
+          {
+            q: "ما هو الرقم الذي لا ينتمي إلى المجموعة: 2، 3، 5، 7، 9؟",
+            a: ["9", "2", "5", "7"],
+            c: 0,
+          },
+        ],
       };
 
       let currentAxisIndex = 0;
@@ -139,6 +544,36 @@
       let axisDone = {}; // axis.key => true when fully done
       let currentQuestions = [];
       let currentQuestionIndex = 0;
+      let timerInterval = null; // for axis timer
+      let timeLeft = 300; // 5 minutes in seconds
+
+      function startTimer() {
+        timeLeft = 300; // reset to 5 minutes
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            stopTimer();
+            finishCurrent(); // auto-finish when time is up
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById("timeLeft").textContent = `${minutes}:${seconds
+          .toString()
+          .padStart(2, "0")}`;
+      }
 
       function showSection(id) {
         screens.forEach((s) => s.classList.remove("active"));
@@ -180,8 +615,20 @@
       function setupLanguageSelectForAxis(axisKey) {
         currentLang = null;
         // update title
-        document.getElementById("langTitle").textContent =
-          "اختر اللغة - " + axes[currentAxisIndex].label;
+        const axis = axes[currentAxisIndex];
+        let title = "اختر الاختبار الذي ستبدأ به  - " + axis.label;
+        if (axisKey === "tech") {
+          title = "اختر اللغة - الكفايات التكنولوجية";
+        }
+        document.getElementById("langTitle").textContent = title;
+        // update note for tech axis
+        const noteEl = document.getElementById("langNote");
+        if (axisKey === "tech") {
+          noteEl.textContent =
+            "إذا اخترت العربية سيكون الاختبار بالعربي، اما إذا اخترت English سيكون الاختبار باللغة الإنجليزية";
+        } else {
+          noteEl.textContent = "";
+        }
         // enable/disable buttons based on axisLangDone
         const btnAr = document.getElementById("btn-ar");
         const btnEn = document.getElementById("btn-en");
@@ -227,6 +674,8 @@
         if (currentLang)
           title += " - " + (currentLang === "ar" ? "عربي" : "English");
         document.getElementById("examTitle").textContent = title;
+        // start timer
+        startTimer();
       }
 
       function renderQuestion() {
@@ -247,6 +696,14 @@
       }
 
       function nextQuestion() {
+        // Check if an answer is selected
+        const selectedAnswer = document.querySelector(
+          'input[name="ans"]:checked'
+        );
+        if (!selectedAnswer) {
+          alert("يرجى اختيار إجابة");
+          return;
+        }
         currentQuestionIndex++;
         if (currentQuestionIndex < currentQuestions.length) {
           renderQuestion();
@@ -257,6 +714,8 @@
       }
 
       function finishCurrent() {
+        // stop timer
+        stopTimer();
         const axis = axes[currentAxisIndex];
         // if linguistic: mark this language done; if both done -> axis done and move next; else go back to lang select with remaining enabled
         if (axis.key === "linguistic") {
@@ -317,6 +776,19 @@
       window.showSection = showSection;
       window.startExam = startExam;
       window.skipBreak = skipBreak;
+
+      // Add Enter key functionality for next question
+      document.addEventListener("keydown", function (event) {
+        if (
+          document.getElementById("examScreen").classList.contains("active") &&
+          event.key === "Enter"
+        ) {
+          nextQuestion();
+        }
+      });
     </script>
+    <div class="footer">
+      <p>&copy; 2023 الجهاز المركزي للتنظيم والإدارة - جميع الحقوق محفوظة</p>
+    </div>
   </body>
 </html>
