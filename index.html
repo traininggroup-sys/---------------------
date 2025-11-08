@@ -144,14 +144,109 @@
     <!-- شاشة عرض المحاور -->
     <section id="axes" class="screen">
       <h2>محاور الاختبار</h2>
-      <ul>
-        <li>1️⃣ محور الكفايات السلوكية والنفسية</li>
-        <li>2️⃣ محور الكفايات اللغوية (عربي + إنجليزي)</li>
-        <li>3️⃣ محور الكفايات المعرفية والتكنولوجية</li>
-        <li>4️⃣ محور الكفايات التربوية (تربوي)</li>
-        <li>5️⃣ محور كفايات التخصص</li>
-      </ul>
+      <div style="text-align: center; margin-bottom: 20px">
+        <div style="display: inline-block; margin-right: 20px">
+          <span
+            style="
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              background-color: #ccc;
+              border-radius: 50%;
+            "
+          ></span>
+          <span style="margin-left: 10px">غير متفعل</span>
+        </div>
+        <div style="display: inline-block">
+          <span
+            style="
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              background-color: #4caf50;
+              border-radius: 50%;
+            "
+          ></span>
+          <span style="margin-left: 10px">متفعل</span>
+        </div>
+        <p style="font-size: 14px; color: #666; margin-top: 10px">
+          المحور المتفعل يكون لونه أخضر والمحور اللي مش متفعل يكون لونه مطفي
+        </p>
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: space-around;
+          flex-wrap: wrap;
+          gap: 20px;
+        "
+      >
+        <div style="text-align: center; flex: 1; min-width: 150px; opacity: 1">
+          <div style="font-size: 48px">🧠</div>
+          <div style="font-weight: bold">الكفايات السلوكية والنفسية</div>
+          <div style="font-size: 14px; color: #666">
+            (يقيس المهارات السلوكية والنفسية)
+          </div>
+          <div style="font-size: 14px">15 سؤال</div>
+        </div>
+        <div
+          style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
+        >
+          <div style="font-size: 48px">📚</div>
+          <div style="font-weight: bold">الكفايات اللغوية</div>
+          <div style="font-size: 14px; color: #666">
+            (يقيس المهارات اللغوية بالعربية والإنجليزية)
+          </div>
+          <div style="font-size: 14px">10 سؤال</div>
+        </div>
+        <div
+          style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
+        >
+          <div style="font-size: 48px">💻</div>
+          <div style="font-weight: bold">الكفايات المعرفية والتكنولوجية</div>
+          <div style="font-size: 14px; color: #666">
+            (يقيس المعرفة العامة والتكنولوجيا)
+          </div>
+          <div style="font-size: 14px">15 سؤال</div>
+        </div>
+        <div
+          style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
+        >
+          <div style="font-size: 48px">👨‍🏫</div>
+          <div style="font-weight: bold">الكفايات التربوية</div>
+          <div style="font-size: 14px; color: #666">
+            (يقيس المهارات التربوية)
+          </div>
+          <div style="font-size: 14px">5 أسئلة</div>
+        </div>
+        <div
+          style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
+        >
+          <div style="font-size: 48px">🎯</div>
+          <div style="font-weight: bold">كفايات التخصص</div>
+          <div style="font-size: 14px; color: #666">
+            (يقيس المهارات المتخصصة)
+          </div>
+          <div style="font-size: 14px">5 أسئلة</div>
+        </div>
+      </div>
       <button onclick="startExam()">ابدأ أول محور</button>
+    </section>
+
+    <!-- شاشة تعريف القدرات الوظيفية -->
+    <section id="functionalIntro" class="screen">
+      <h2>تعريف القدرات الوظيفية</h2>
+      <p>
+        هذا الاختبار يقيس قدراتك في حل المشكلات والتخطيط والتعاون في بيئة العمل.
+      </p>
+      <button onclick="startFunctionalExam()">ابدأ الاختبار</button>
+    </section>
+
+    <!-- شاشة تعريف الأيكيو أشكال -->
+    <section id="iqShapesIntro" class="screen">
+      <h2>تعريف الأيكيو أشكال</h2>
+      <p>هذا الاختبار يقيس ذكاءك من خلال أسئلة الأشكال والأنماط المنطقية.</p>
+      <button onclick="startIqShapesExam()">ابدأ الاختبار</button>
     </section>
 
     <!-- شاشة اختيار اللغة -->
@@ -198,8 +293,14 @@
           ],
         },
         { key: "linguistic", label: "الكفايات اللغوية" },
-        { key: "cognitive", label: "الكفايات المعرفية" },
-        { key: "tech", label: "الحاسب الآلي" },
+        {
+          key: "cognitive_tech",
+          label: "الكفايات المعرفية والتكنولوجية",
+          subAxes: [
+            { key: "cognitive", label: "المعلومات العامة" },
+            { key: "tech", label: "الحاسب الآلي" },
+          ],
+        },
         { key: "pedagogic", label: "الكفايات التربوية" },
         { key: "specialization", label: "كفايات التخصص" },
       ];
@@ -541,9 +642,10 @@
       let currentAxisIndex = 0;
       let currentSubAxisIndex = 0;
       let currentLang = null; // 'ar' or 'en'
+      let currentAxisKey = null; // 'linguistic' or 'tech' for language selects
       let axisLangDone = {
         linguistic: { ar: false, en: false },
-        tech: { ar: false, en: false },
+        cognitive_tech: { ar: false, en: false },
       }; // track per-axis per-lang
       let axisDone = {}; // axis.key => true when fully done
       let currentQuestions = [];
@@ -615,13 +717,20 @@
         // if axis has subAxes, start with first subAxis
         if (axis.subAxes && axis.subAxes.length > 0) {
           const subAxis = axis.subAxes[currentSubAxisIndex];
-          if (subAxis.key === "tech") {
+          if (subAxis.key === "functional") {
+            showSection("functionalIntro");
+            return;
+          } else if (subAxis.key === "iq_shapes") {
+            showSection("iqShapesIntro");
+            return;
+          } else if (subAxis.key === "tech") {
             setupLanguageSelectForAxis("tech");
             return;
+          } else {
+            loadQuestionsForAxis(subAxis.key);
+            showSection("examScreen");
+            return;
           }
-          loadQuestionsForAxis(subAxis.key);
-          showSection("examScreen");
-          return;
         }
 
         // default axes: load questions and show
@@ -841,6 +950,14 @@
       // start functions for buttons
       window.showSection = showSection;
       window.startExam = startExam;
+      window.startFunctionalExam = function () {
+        loadQuestionsForAxis("functional");
+        showSection("examScreen");
+      };
+      window.startIqShapesExam = function () {
+        loadQuestionsForAxis("iq_shapes");
+        showSection("examScreen");
+      };
       window.skipBreak = skipBreak;
 
       // Add Enter key functionality for next question
