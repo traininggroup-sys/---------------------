@@ -850,6 +850,7 @@
             if (e.key === "Enter") {
               this.checked = true;
               nextQuestion();
+              e.stopPropagation();
             }
           });
         });
