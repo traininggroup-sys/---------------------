@@ -125,6 +125,11 @@
         width: 100%;
         font-size: 14px;
       }
+      p.title {
+        background: #f3f3f3;
+        color: blue;
+        padding: 10px;
+      }
     </style>
   </head>
   <body>
@@ -138,12 +143,19 @@
         نفيدكم علمًا بأنكم على وشك البدء في اختبار الجهاز المركزي للتنظيم
         والإدارة
       </h2>
+
       <button onclick="showSection('axes')">متابعة</button>
     </section>
 
     <!-- شاشة عرض المحاور -->
     <section id="axes" class="screen">
       <h2>محاور الاختبار</h2>
+      <p class="title">
+        <b style="color: red"> نفيدكم علماً بالتالي</b> <br />
+        ترتيب الامتحانات كما هو موضح بالشكل التالي بدءاً بمحور الجدارات
+        السلوكية.<br />
+        حفظ الإجابة يتم باختيار إحدى الإجابات ثم الضغط على التالي.
+      </p>
       <div style="text-align: center; margin-bottom: 20px">
         <div style="display: inline-block; margin-right: 20px">
           <span
@@ -647,6 +659,16 @@
       let currentQuestionIndex = 0;
       let timerInterval = null; // for axis timer
       let timeLeft = 300; // 5 minutes in seconds
+      let breakInterval = null; // for break countdown
+
+      // Define skipBreak globally to avoid reference errors
+      window.skipBreak = function () {
+        if (breakInterval) {
+          clearInterval(breakInterval);
+          breakInterval = null;
+        }
+        startAxis();
+      };
 
       function startTimer() {
         timeLeft = 300; // reset to 5 minutes
@@ -928,18 +950,15 @@
         document.getElementById("nextAxisTitle").textContent = titleText;
         document.getElementById("countdown").textContent = count;
         showSection("breakScreen");
-        const interval = setInterval(() => {
+        breakInterval = setInterval(() => {
           count--;
           document.getElementById("countdown").textContent = count;
           if (count <= 0) {
-            clearInterval(interval);
+            clearInterval(breakInterval);
+            breakInterval = null;
             startAxis();
           }
         }, 1000);
-        window.skipBreak = function () {
-          clearInterval(interval);
-          startAxis();
-        };
       }
 
       // start functions for buttons
@@ -953,7 +972,6 @@
         loadQuestionsForAxis("iq_shapes");
         showSection("examScreen");
       };
-      window.skipBreak = skipBreak;
 
       // Add Enter key functionality for next question
       document.addEventListener("keydown", function (event) {
