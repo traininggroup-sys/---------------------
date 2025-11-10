@@ -199,7 +199,7 @@
           <div style="font-size: 14px; color: #666">
             (يقيس المهارات السلوكية والنفسية)
           </div>
-          <div style="font-size: 14px">15 سؤال</div>
+          <div style="font-size: 14px">١٤٩ سؤال</div>
         </div>
         <div
           style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
@@ -209,7 +209,7 @@
           <div style="font-size: 14px; color: #666">
             (يقيس المهارات اللغوية بالعربية والإنجليزية)
           </div>
-          <div style="font-size: 14px">10 سؤال</div>
+          <div style="font-size: 14px">٢٠ سؤال</div>
         </div>
         <div
           style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
@@ -219,7 +219,7 @@
           <div style="font-size: 14px; color: #666">
             (يقيس المعرفة العامة والتكنولوجيا)
           </div>
-          <div style="font-size: 14px">15 سؤال</div>
+          <div style="font-size: 14px">٢٠ سؤال</div>
         </div>
         <div
           style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
@@ -229,7 +229,7 @@
           <div style="font-size: 14px; color: #666">
             (يقيس المهارات التربوية)
           </div>
-          <div style="font-size: 14px">5 أسئلة</div>
+          <div style="font-size: 14px">٤٥ أسئلة</div>
         </div>
         <div
           style="text-align: center; flex: 1; min-width: 150px; opacity: 0.5"
@@ -239,7 +239,7 @@
           <div style="font-size: 14px; color: #666">
             (يقيس المهارات المتخصصة)
           </div>
-          <div style="font-size: 14px">5 أسئلة</div>
+          <div style="font-size: 14px">٤٠ أسئلة</div>
         </div>
       </div>
       <button onclick="startExam()">ابدأ أول محور</button>
@@ -289,7 +289,15 @@
     <!-- شاشة النهاية -->
     <section id="endScreen" class="screen">
       <h2>انتهيت من جميع المحاور ✅</h2>
+      <button onclick="showResults()">عرض النتيجة</button>
       <button onclick="location.reload()">تسجيل الخروج</button>
+    </section>
+
+    <!-- شاشة النتائج -->
+    <section id="resultsScreen" class="screen">
+      <h2>نتائج الاختبار</h2>
+      <div id="resultsContent"></div>
+      <button onclick="showSection('endScreen')">العودة</button>
     </section>
 
     <script>
@@ -660,6 +668,7 @@
       let timerInterval = null; // for axis timer
       let timeLeft = 300; // 5 minutes in seconds
       let breakInterval = null; // for break countdown
+      let userAnswers = {}; // key: array of {qIndex, selected, correct}
 
       // Define skipBreak globally to avoid reference errors
       window.skipBreak = function () {
@@ -865,6 +874,23 @@
           alert("يرجى اختيار إجابة");
           return;
         }
+        // record answer
+        const selectedIndex = Array.from(
+          document.querySelectorAll('input[name="ans"]')
+        ).indexOf(selectedAnswer);
+        const q = currentQuestions[currentQuestionIndex];
+        const axisKey =
+          axes[currentAxisIndex].key +
+          (currentLang ? "_" + currentLang : "") +
+          (currentAxisKey && currentAxisKey !== axes[currentAxisIndex].key
+            ? "_" + currentAxisKey
+            : "");
+        if (!userAnswers[axisKey]) userAnswers[axisKey] = [];
+        userAnswers[axisKey].push({
+          qIndex: currentQuestionIndex,
+          selected: selectedIndex,
+          correct: q.c,
+        });
         currentQuestionIndex++;
         if (currentQuestionIndex < currentQuestions.length) {
           renderQuestion();
@@ -964,9 +990,34 @@
         }, 1000);
       }
 
+      function showResults() {
+        const resultsDiv = document.getElementById("resultsContent");
+        let resultsHTML = "<h3>نتائج الاختبار</h3><ul>";
+        for (const [key, answers] of Object.entries(userAnswers)) {
+          const total = answers.length;
+          const correct = answers.filter(
+            (a) => a.selected === a.correct
+          ).length;
+          // Find axis label
+          let label = key;
+          const axis = axes.find((ax) => ax.key === key.split("_")[0]);
+          if (axis) {
+            label = axis.label;
+            if (key.includes("_ar")) label += " (عربي)";
+            else if (key.includes("_en")) label += " (English)";
+          }
+          resultsHTML +=
+            "<li>" + label + ": " + correct + " صحيح من " + total + "</li>";
+        }
+        resultsHTML += "</ul>";
+        resultsDiv.innerHTML = resultsHTML;
+        showSection("resultsScreen");
+      }
+
       // start functions for buttons
       window.showSection = showSection;
       window.startExam = startExam;
+      window.showResults = showResults;
       window.startFunctionalExam = function () {
         loadQuestionsForAxis("functional");
         showSection("examScreen");
