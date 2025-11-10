@@ -660,6 +660,8 @@
       let timerInterval = null; // for axis timer
       let timeLeft = 300; // 5 minutes in seconds
       let breakInterval = null; // for break countdown
+      let userAnswers = {}; // store answers per axis key
+      let currentAnswers = []; // answers for current axis
 
       // Define skipBreak globally to avoid reference errors
       window.skipBreak = function () {
@@ -810,6 +812,7 @@
         currentQuestions =
           QUESTIONS[key] || QUESTIONS[axes[currentAxisIndex].key] || [];
         currentQuestionIndex = 0;
+        currentAnswers = []; // reset answers for new axis
         renderQuestion();
         // set exam title
         const axis = axes[currentAxisIndex];
