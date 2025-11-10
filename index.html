@@ -8,14 +8,14 @@
       body {
         font-family: "Arial", "Helvetica", sans-serif;
         text-align: center;
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        background: #dededf;
         direction: rtl;
         margin: 0;
         padding: 0;
         min-height: 100vh;
       }
       .header {
-        background: #1565c0;
+        background: #777777;
         color: white;
         padding: 20px;
         text-align: center;
@@ -41,7 +41,7 @@
         display: block;
       }
       button {
-        background: #1976d2;
+        background: #3c3f41;
         color: white;
         border: none;
         padding: 12px 24px;
@@ -50,7 +50,6 @@
         border-radius: 6px;
         transition: background 0.3s;
         font-weight: bold;
-        margin-top: 10px;
       }
       button:hover {
         background: #1565c0;
@@ -103,7 +102,6 @@
       }
       #questionContainer label {
         display: block;
-        margin: 10px 0;
         font-size: 16px;
         cursor: pointer;
         padding: 8px;
@@ -668,7 +666,7 @@
       let timerInterval = null; // for axis timer
       let timeLeft = 300; // 5 minutes in seconds
       let breakInterval = null; // for break countdown
-      let userAnswers = {}; // key: array of {qIndex, selected, correct}
+      let userAnswers = {};
 
       // Define skipBreak globally to avoid reference errors
       window.skipBreak = function () {
