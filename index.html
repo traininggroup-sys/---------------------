@@ -302,25 +302,43 @@
       const screens = document.querySelectorAll(".screen");
       const axes = [
         {
-          key: "behavioral_psychological",
-          label: "الكفايات السلوكية والنفسية",
+          key: "training",
+          label: "اختبار التدريب",
           subAxes: [
-            { key: "behavioral", label: "الجدارات السلوكية" },
-            { key: "functional", label: "القدرات الوظيفية" },
-            { key: "iq_shapes", label: "الأيكيو أشكال" },
+            {
+              key: "behavioral",
+              label: "الكفايات السلوكية والنفسية",
+            },
+            {
+              key: "linguistic",
+              label: "الكفايات اللغوية",
+            },
+            {
+              key: "cognitive",
+              label: "الكفايات المعرفية",
+            },
+            {
+              key: "tech",
+              label: "الكفايات التكنولوجية",
+            },
+            {
+              key: "pedagogic",
+              label: "الكفايات التربوية",
+            },
+            {
+              key: "specialization",
+              label: "كفايات التخصص",
+            },
+            {
+              key: "functional",
+              label: "القدرات الوظيفية",
+            },
+            {
+              key: "iq_shapes",
+              label: "الأيكيو أشكال",
+            },
           ],
         },
-        { key: "linguistic", label: "الكفايات اللغوية" },
-        {
-          key: "cognitive_tech",
-          label: "الكفايات المعرفية والتكنولوجية",
-          subAxes: [
-            { key: "cognitive", label: "المعلومات العامة" },
-            { key: "tech", label: "الحاسب الآلي" },
-          ],
-        },
-        { key: "pedagogic", label: "الكفايات التربوية" },
-        { key: "specialization", label: "كفايات التخصص" },
       ];
 
       // real questions
