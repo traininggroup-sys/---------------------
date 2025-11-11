@@ -302,43 +302,25 @@
       const screens = document.querySelectorAll(".screen");
       const axes = [
         {
-          key: "training",
-          label: "اختبار التدريب",
+          key: "behavioral_psychological",
+          label: "الكفايات السلوكية والنفسية",
           subAxes: [
-            {
-              key: "behavioral",
-              label: "الكفايات السلوكية والنفسية",
-            },
-            {
-              key: "linguistic",
-              label: "الكفايات اللغوية",
-            },
-            {
-              key: "cognitive",
-              label: "الكفايات المعرفية",
-            },
-            {
-              key: "tech",
-              label: "الكفايات التكنولوجية",
-            },
-            {
-              key: "pedagogic",
-              label: "الكفايات التربوية",
-            },
-            {
-              key: "specialization",
-              label: "كفايات التخصص",
-            },
-            {
-              key: "functional",
-              label: "القدرات الوظيفية",
-            },
-            {
-              key: "iq_shapes",
-              label: "الأيكيو أشكال",
-            },
+            { key: "behavioral", label: "الجدارات السلوكية" },
+            { key: "functional", label: "القدرات الوظيفية" },
+            { key: "iq_shapes", label: "الأيكيو أشكال" },
           ],
         },
+        { key: "linguistic", label: "الكفايات اللغوية" },
+        {
+          key: "cognitive_tech",
+          label: "الكفايات المعرفية والتكنولوجية",
+          subAxes: [
+            { key: "cognitive", label: "المعلومات العامة" },
+            { key: "tech", label: "الحاسب الآلي" },
+          ],
+        },
+        { key: "pedagogic", label: "الكفايات التربوية" },
+        { key: "specialization", label: "كفايات التخصص" },
       ];
 
       // real questions
@@ -1008,12 +990,15 @@
 
       function showResults() {
         const resultsDiv = document.getElementById("resultsContent");
-        let resultsHTML = "<h3>نتائج الاختبار</h3><ul>";
+        let resultsHTML = "<h3>نتائج الاختبار</h3>";
+        // Group answers by axis key
+        let grouped = {};
         for (const [key, answers] of Object.entries(userAnswers)) {
-          const total = answers.length;
-          const correct = answers.filter(
-            (a) => a.selected === a.correct
-          ).length;
+          grouped[key] = answers.map((ans) => ({ ...ans, axisKey: key }));
+        }
+        // Display per axis
+        for (const key in grouped) {
+          const answers = grouped[key];
           // Find axis label
           let label = key;
           const axis = axes.find((ax) => ax.key === key.split("_")[0]);
@@ -1021,11 +1006,28 @@
             label = axis.label;
             if (key.includes("_ar")) label += " (عربي)";
             else if (key.includes("_en")) label += " (English)";
+            // For sub-axes, find sub-label
+            if (axis.subAxes) {
+              const subAxis = axis.subAxes.find((sub) =>
+                key.startsWith(sub.key)
+              );
+              if (subAxis) label = subAxis.label;
+            }
           }
-          resultsHTML +=
-            "<li>" + label + ": " + correct + " صحيح من " + total + "</li>";
+          resultsHTML += `<h4>${label}</h4><ul>`;
+          answers.forEach((ans, idx) => {
+            const questions = QUESTIONS[ans.axisKey];
+            if (!questions) return;
+            const q = questions[ans.qIndex];
+            const userAnsText = q.a[ans.selected];
+            const correctAnsText = q.a[ans.correct];
+            const status = ans.selected === ans.correct ? "صحيح" : "خطأ";
+            resultsHTML += `<li><strong>السؤال ${idx + 1}:</strong> ${
+              q.q
+            }<br>إجابتك: ${userAnsText} (${status})<br>الإجابة الصحيحة: ${correctAnsText}</li>`;
+          });
+          resultsHTML += "</ul>";
         }
-        resultsHTML += "</ul>";
         resultsDiv.innerHTML = resultsHTML;
         showSection("resultsScreen");
       }
