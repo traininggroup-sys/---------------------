@@ -128,6 +128,52 @@
         color: blue;
         padding: 10px;
       }
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .result-card {
+        background: #fff;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: right;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .result-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      .result-card h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        color: #1565c0;
+      }
+      .progress-bar {
+        background: #f1f1f1;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 20px;
+        margin-top: 10px;
+      }
+      .progress {
+        height: 100%;
+        background: #4caf50;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        line-height: 20px;
+      }
+      .correct {
+        color: #4caf50;
+        font-weight: bold;
+      }
+      .wrong {
+        color: #d32f2f;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -294,9 +340,47 @@
     <!-- شاشة النتائج -->
     <section id="resultsScreen" class="screen">
       <h2>نتائج الاختبار</h2>
-      <div id="resultsContent"></div>
+      <div id="resultsContent" class="results-grid"></div>
       <button onclick="showSection('endScreen')">العودة</button>
     </section>
+
+    <!-- نافذة التفاصيل -->
+    <div
+      id="detailsModal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          max-width: 600px;
+          width: 90%;
+          max-height: 80%;
+          overflow: auto;
+          position: relative;
+        "
+      >
+        <button
+          onclick="closeDetails()"
+          style="position: absolute; top: 10px; right: 10px"
+        >
+          ✖ إغلاق
+        </button>
+        <h3 id="detailsTitle"></h3>
+        <div id="detailsContent"></div>
+      </div>
+    </div>
 
     <script>
       const screens = document.querySelectorAll(".screen");
@@ -989,47 +1073,67 @@
       }
 
       function showResults() {
-        const resultsDiv = document.getElementById("resultsContent");
-        let resultsHTML = "<h3>نتائج الاختبار</h3>";
-        // Group answers by axis key
-        let grouped = {};
-        for (const [key, answers] of Object.entries(userAnswers)) {
-          grouped[key] = answers.map((ans) => ({ ...ans, axisKey: key }));
-        }
-        // Display per axis
-        for (const key in grouped) {
-          const answers = grouped[key];
-          // Find axis label
-          let label = key;
-          const axis = axes.find((ax) => ax.key === key.split("_")[0]);
-          if (axis) {
-            label = axis.label;
-            if (key.includes("_ar")) label += " (عربي)";
-            else if (key.includes("_en")) label += " (English)";
-            // For sub-axes, find sub-label
-            if (axis.subAxes) {
-              const subAxis = axis.subAxes.find((sub) =>
-                key.startsWith(sub.key)
-              );
-              if (subAxis) label = subAxis.label;
-            }
-          }
-          resultsHTML += `<h4>${label}</h4><ul>`;
-          answers.forEach((ans, idx) => {
-            const questions = QUESTIONS[ans.axisKey];
-            if (!questions) return;
-            const q = questions[ans.qIndex];
-            const userAnsText = q.a[ans.selected];
-            const correctAnsText = q.a[ans.correct];
-            const status = ans.selected === ans.correct ? "صحيح" : "خطأ";
-            resultsHTML += `<li><strong>السؤال ${idx + 1}:</strong> ${
-              q.q
-            }<br>إجابتك: ${userAnsText} (${status})<br>الإجابة الصحيحة: ${correctAnsText}</li>`;
-          });
-          resultsHTML += "</ul>";
-        }
-        resultsDiv.innerHTML = resultsHTML;
         showSection("resultsScreen");
+        const container = document.getElementById("resultsContent");
+        container.innerHTML = ""; // تفريغ المحتوى القديم
+
+        axes.forEach((axis) => {
+          const axisKey = axis.key;
+          const answers = userAnswers[axisKey] || [];
+
+          // حساب النسبة
+          const correctCount = answers.filter(
+            (a) => a.selected === a.correct
+          ).length;
+          const total = answers.length;
+          const percent = total ? Math.round((correctCount / total) * 100) : 0;
+
+          // إنشاء بطاقة النتيجة
+          const card = document.createElement("div");
+          card.classList.add("result-card");
+          card.innerHTML = `
+      <h3>${axis.label}</h3>
+      <div class="progress-bar">
+        <div class="progress" style="width: ${percent}%">${percent}%</div>
+      </div>
+      <button onclick="showDetails('${axisKey}')">تفاصيل</button>
+    `;
+          container.appendChild(card);
+        });
+      }
+
+      // فتح نافذة التفاصيل
+      function showDetails(axisKey) {
+        const modal = document.getElementById("detailsModal");
+        const title = document.getElementById("detailsTitle");
+        const content = document.getElementById("detailsContent");
+
+        const answers = userAnswers[axisKey] || [];
+        const axisLabel =
+          axes.find((a) => a.key === axisKey)?.label || "المحور";
+
+        title.textContent = "تفاصيل " + axisLabel;
+
+        content.innerHTML = answers
+          .map((a) => {
+            const qObj =
+              currentQuestions[a.qIndex] || QUESTIONS[axisKey][a.qIndex];
+            if (!qObj) return "";
+            return `
+      <p><b>السؤال:</b> ${qObj.q}</p>
+      <p><b>إجابتك:</b> ${qObj.a[a.selected]}</p>
+      <p><b>الإجابة الصحيحة:</b> ${qObj.a[a.correct]}</p>
+      <hr>
+    `;
+          })
+          .join("");
+
+        modal.style.display = "flex";
+      }
+
+      // إغلاق نافذة التفاصيل
+      function closeDetails() {
+        document.getElementById("detailsModal").style.display = "none";
       }
 
       // start functions for buttons
