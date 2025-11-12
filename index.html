@@ -344,44 +344,6 @@
       <button onclick="showSection('endScreen')">العودة</button>
     </section>
 
-    <!-- نافذة التفاصيل -->
-    <div
-      id="detailsModal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <div
-        style="
-          background: white;
-          padding: 20px;
-          border-radius: 10px;
-          max-width: 600px;
-          width: 90%;
-          max-height: 80%;
-          overflow: auto;
-          position: relative;
-        "
-      >
-        <button
-          onclick="closeDetails()"
-          style="position: absolute; top: 10px; right: 10px"
-        >
-          ✖ إغلاق
-        </button>
-        <h3 id="detailsTitle"></h3>
-        <div id="detailsContent"></div>
-      </div>
-    </div>
-
     <script>
       const screens = document.querySelectorAll(".screen");
       const axes = [
@@ -1073,67 +1035,38 @@
       }
 
       function showResults() {
-        showSection("resultsScreen");
-        const container = document.getElementById("resultsContent");
-        container.innerHTML = ""; // تفريغ المحتوى القديم
+        const resultsDiv = document.getElementById("resultsContent");
+        resultsDiv.innerHTML = "";
 
         axes.forEach((axis) => {
           const axisKey = axis.key;
-          const answers = userAnswers[axisKey] || [];
-
-          // حساب النسبة
-          const correctCount = answers.filter(
+          const userAxisAnswers = userAnswers[axisKey] || [];
+          const total = userAxisAnswers.length;
+          const correct = userAxisAnswers.filter(
             (a) => a.selected === a.correct
           ).length;
-          const total = answers.length;
-          const percent = total ? Math.round((correctCount / total) * 100) : 0;
+          const percent = total ? Math.round((correct / total) * 100) : 0;
 
-          // إنشاء بطاقة النتيجة
           const card = document.createElement("div");
-          card.classList.add("result-card");
+          card.className = "result-card";
           card.innerHTML = `
       <h3>${axis.label}</h3>
+      <p>الإجابات الصحيحة: <span class="correct">${correct}</span> / ${total}</p>
       <div class="progress-bar">
-        <div class="progress" style="width: ${percent}%">${percent}%</div>
+        <div class="progress" style="width:${percent}%">${percent}%</div>
       </div>
-      <button onclick="showDetails('${axisKey}')">تفاصيل</button>
+      <p>${
+        percent >= 80
+          ? "أحسنت! 🎉"
+          : percent >= 50
+          ? "جيد 👍"
+          : "حاول مرة أخرى 😅"
+      }</p>
     `;
-          container.appendChild(card);
+          resultsDiv.appendChild(card);
         });
-      }
 
-      // فتح نافذة التفاصيل
-      function showDetails(axisKey) {
-        const modal = document.getElementById("detailsModal");
-        const title = document.getElementById("detailsTitle");
-        const content = document.getElementById("detailsContent");
-
-        const answers = userAnswers[axisKey] || [];
-        const axisLabel =
-          axes.find((a) => a.key === axisKey)?.label || "المحور";
-
-        title.textContent = "تفاصيل " + axisLabel;
-
-        content.innerHTML = answers
-          .map((a) => {
-            const qObj =
-              currentQuestions[a.qIndex] || QUESTIONS[axisKey][a.qIndex];
-            if (!qObj) return "";
-            return `
-      <p><b>السؤال:</b> ${qObj.q}</p>
-      <p><b>إجابتك:</b> ${qObj.a[a.selected]}</p>
-      <p><b>الإجابة الصحيحة:</b> ${qObj.a[a.correct]}</p>
-      <hr>
-    `;
-          })
-          .join("");
-
-        modal.style.display = "flex";
-      }
-
-      // إغلاق نافذة التفاصيل
-      function closeDetails() {
-        document.getElementById("detailsModal").style.display = "none";
+        showSection("resultsScreen");
       }
 
       // start functions for buttons
