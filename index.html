@@ -1007,9 +1007,10 @@
             : "");
         if (!userAnswers[axisKey]) userAnswers[axisKey] = [];
         userAnswers[axisKey].push({
-          qIndex: currentQuestionIndex,
           selected: selectedIndex,
           correct: q.c,
+          question: q.q,
+          options: q.a,
         });
         currentQuestionIndex++;
         if (currentQuestionIndex < currentQuestions.length) {
@@ -1145,7 +1146,42 @@
           resultsHTML += `<li>${axisName}: ${correctCount} من ${total} إجابات صحيحة (${percentage}%) ✅</li>`;
         }
 
-        resultsHTML += "</ul>";
+        resultsHTML += "</ul><h3>تفاصيل الإجابات</h3>";
+
+        for (const axisKey in userAnswers) {
+          const answers = userAnswers[axisKey];
+
+          // axis name mapping
+          let axisName = axisKey;
+          if (axisKey.includes("behavioral"))
+            axisName = "الكفايات السلوكية والنفسية";
+          else if (
+            axisKey.includes("linguistic_ar") ||
+            axisKey.includes("linguistic_en")
+          )
+            axisName = "الكفايات اللغوية";
+          else if (axisKey.includes("cognitive"))
+            axisName = "الكفايات المعرفية";
+          else if (axisKey.includes("tech")) axisName = "الكفايات التكنولوجية";
+          else if (axisKey.includes("pedagogic"))
+            axisName = "الكفايات التربوية";
+          else if (axisKey.includes("specialization"))
+            axisName = "كفايات التخصص";
+          else if (axisKey.includes("functional"))
+            axisName = "القدرات الوظيفية";
+          else if (axisKey.includes("iq_shapes")) axisName = "الأيكيو أشكال";
+
+          resultsHTML += `<h4>${axisName}</h4><ol>`;
+          answers.forEach((answer, index) => {
+            const selectedText =
+              answer.options[answer.selected] || "لم يتم الاختيار";
+            const correctText = answer.options[answer.correct];
+            const isCorrect = answer.selected === answer.correct ? "✅" : "❌";
+            resultsHTML += `<li><strong>السؤال:</strong> ${answer.question}<br><strong>إجابتك:</strong> ${selectedText}<br><strong>الإجابة الصحيحة:</strong> ${correctText} ${isCorrect}</li>`;
+          });
+          resultsHTML += "</ol>";
+        }
+
         resultsDiv.innerHTML = resultsHTML;
         showSection("resultsScreen");
       }

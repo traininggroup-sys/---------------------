@@ -1,6 +1,12 @@
-- [x] Add CSS to disable text selection on body
-- [x] Add JavaScript to prevent right-click context menu
-- [x] Add JavaScript to prevent copy/paste shortcuts (Ctrl+C, Ctrl+V, etc.)
-- [x] Add a black overlay div for screenshot detection
-- [x] Add visibilitychange event to show black screen when page is hidden
-- [x] Test the changes
+# TODO: تعديل عرض النتائج ليكون تفاعلياً مع تفاصيل الأسئلة
+
+## المهام المطلوبة:
+- [ ] تعديل دالة nextQuestion لحفظ نص السؤال، خيارات الإجابات، الإجابة المختارة، والإجابة الصحيحة في userAnswers.
+- [ ] إضافة دالة getAxisName لتحديد اسم المحور بناءً على المفتاح.
+- [ ] تعديل دالة showResults لعرض قائمة بالمحاور (مع عدد الأسئلة الصحيحة)، وعند النقر على محور، يظهر تفاصيل الأسئلة (السؤال، إجابة الشخص، هل صحيحة أم خطأ، الإجابة الصحيحة).
+- [ ] إضافة CSS لتنسيق التفاصيل (مثل إخفاء/إظهار التفاصيل عند النقر).
+- [ ] اختبار التفاعلية للتأكد من عملها بشكل صحيح.
+
+## ملاحظات:
+- استخدم JavaScript لإضافة event listeners للنقر على المحاور لإظهار/إخفاء التفاصيل.
+- تأكد من أن التفاصيل تظهر بشكل منظم وسهل القراءة.
